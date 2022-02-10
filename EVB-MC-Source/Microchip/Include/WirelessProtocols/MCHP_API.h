@@ -52,7 +52,7 @@
     #include "SystemProfile.h"
     
     #if defined(PROTOCOL_P2P)
-        #include "WirelessProtocols\P2P\P2P.h"
+        #include "P2P.h"
     #endif
     
     #if defined(PROTOCOL_MIWI)

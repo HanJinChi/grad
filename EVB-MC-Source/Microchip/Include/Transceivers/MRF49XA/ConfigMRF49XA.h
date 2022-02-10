@@ -49,7 +49,7 @@
 
     #define __CONFIG_MRF49XA_H
     
-    #include "Transceivers\MRF49XA\MRF49XA.h"
+    #include "MRF49XA.h"
 
     /*********************************************************************/
     // BAND_915, BAND_868 or BAND_434 are three supported frequency

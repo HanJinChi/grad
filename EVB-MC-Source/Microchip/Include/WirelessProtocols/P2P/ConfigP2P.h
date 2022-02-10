@@ -53,7 +53,7 @@
 
     #if defined(PROTOCOL_P2P)
 
-        #include "WirelessProtocols\SymbolTime.h"
+        #include "SymbolTime.h"
     
         /*********************************************************************/
         // ENABLE_DUMP will enable the stack to be able to print out the 

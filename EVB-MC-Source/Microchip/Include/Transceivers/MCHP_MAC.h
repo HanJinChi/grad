@@ -50,12 +50,12 @@
 
     #include "ConfigApp.h"
     #include "GenericTypeDefs.h"
-    #include "Transceivers\Transceivers.h"
+    #include "Transceivers.h"
     #if defined(PROTOCOL_MIWI)
         #include "WirelessProtocols\MiWi\ConfigMiWi.h"
     #endif
     #if defined(PROTOCOL_P2P)
-        #include "WirelessProtocols\P2P\ConfigP2P.h"
+        #include "ConfigP2P.h"
     #endif
     
     #define CHANNEL_ASSESSMENT_CARRIER_SENSE    0x00

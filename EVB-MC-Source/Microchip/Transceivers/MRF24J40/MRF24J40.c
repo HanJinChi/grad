@@ -56,12 +56,12 @@
 
     #include "Compiler.h"
     #include "GenericTypeDefs.h"
-    #include "Transceivers\MCHP_MAC.h"
+    #include "MCHP_MAC.h"
     #include "MSPI.h"
-    #include "Transceivers\Transceivers.h"
+    #include "Transceivers.h"
     #include "Console.h"
-    #include "WirelessProtocols\SymbolTime.h"
-    #include "WirelessProtocols\NVM.h"
+    #include "SymbolTime.h"
+    #include "NVM.h"
   
     /************************ VARIABLES ********************************/
     MACINIT_PARAM   MACInitParams;

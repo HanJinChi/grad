@@ -52,7 +52,7 @@
         #include "SystemProfile.h"
         #include "GenericTypeDefs.h"
         #include "Compiler.h"
-        #include "WirelessProtocols\MCHP_API.h"
+        #include "MCHP_API.h"
        
         /******************************************************************************/
         // there are three ways to use NVM to store data: External EPROM, Data EEPROM 

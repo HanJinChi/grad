@@ -54,10 +54,10 @@
 #include "SystemProfile.h"
 #include "Compiler.h"
 #include "Console.h"
-#include "WirelessProtocols\LCDBlocking.h"
+#include "LCDBlocking.h"
 #include "TimeDelay.h"
 #include "HardwareProfile.h"
-#include "WirelessProtocols\SymbolTime.h"
+#include "SymbolTime.h"
 
 #if defined(__18F4620) 
         #pragma romdata CONFIG1H = 0x300001

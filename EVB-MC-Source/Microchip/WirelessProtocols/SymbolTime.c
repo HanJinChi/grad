@@ -48,7 +48,7 @@
 
 /************************ HEADERS **********************************/
 #include "SystemProfile.h"
-#include "WirelessProtocols\SymbolTime.h"
+#include "SymbolTime.h"
 #include "Compiler.h"
 #include "GenericTypeDefs.h"
 #include "Console.h"

@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "console.h": "c",
+        "systemprofile.h": "c",
+        "compiler.h": "c",
+        "generictypedefs.h": "c",
+        "hardwareprofile.h": "c",
+        "configapp.h": "c"
+    }
+}

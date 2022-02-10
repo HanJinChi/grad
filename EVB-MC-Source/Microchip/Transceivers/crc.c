@@ -45,7 +45,7 @@
 *  2.1   6/20/2009    yfy       Add LCD support
 *  3.1   5/28/2010    yfy       MiWi DE 3.1
 ********************************************************************/
-#include "Transceivers\Transceivers.h"
+#include "Transceivers.h"
 
 #if defined(SOFTWARE_CRC)
     #include "Transceivers\crc.h"

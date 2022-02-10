@@ -29,7 +29,7 @@
 
 #include "ConfigApp.h"
 #if defined(PROTOCOL_P2P)
-    #include "WirelessProtocols\P2P\P2P.h"
+    #include "P2P.h"
 #elif defined(PROTOCOL_MIWI)
     #include "WirelessProtocols\MiWi\MiWi.h"
 #endif

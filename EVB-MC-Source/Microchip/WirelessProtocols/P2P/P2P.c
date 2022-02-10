@@ -52,15 +52,15 @@
 #if defined(PROTOCOL_P2P)
 
 #include "MSPI.h"
-#include "WirelessProtocols\P2P\P2P.h"
+#include "P2P.h"
 #include "Compiler.h"
 #include "GenericTypeDefs.h"
 #include "Console.h"
-#include "WirelessProtocols\NVM.h"
-#include "WirelessProtocols\SymbolTime.h"
-#include "Transceivers\MCHP_MAC.h"
-#include "Transceivers\Transceivers.h"
-#include "WirelessProtocols\MCHP_API.h"
+#include "NVM.h"
+#include "SymbolTime.h"
+#include "MCHP_MAC.h"
+#include "Transceivers.h"
+#include "MCHP_API.h"
 
 
 /************************ VARIABLES ********************************/
@@ -232,7 +232,7 @@ BOOL CheckForData(void);
 /******************************************************************/
 void MacroNop(void)
 {
-    Nop(); 
+    asm("NOP"); 
 }    
 
 

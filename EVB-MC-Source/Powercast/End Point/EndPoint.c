@@ -60,8 +60,8 @@
 #include "Console.h"
 #include "ConfigApp.h"
 #include "HardwareProfile.h"
-#include "WirelessProtocols\MCHP_API.h"
-#include "WirelessProtocols\SymbolTime.h"
+#include "MCHP_API.h"
+#include "SymbolTime.h"
 
 //************************** FUNCTIONS ************************************
 void GetBoardID(void);

@@ -52,7 +52,7 @@
         #define IEEE_802_15_4
         #define FULL_CHANNEL_MAP        0x07FFF800
 
-        #include "Transceivers\MRF24J40\MRF24J40.h"
+        #include "MRF24J40.h"
     #endif
 
     #if defined(MRF49XA)

@@ -61,7 +61,7 @@
 #include "Compiler.h"
 #include "GenericTypeDefs.h"
 #include "HardwareProfile.h"
-#include "WirelessProtocols\LCDBlocking.h"
+#include "LCDBlocking.h"
 #include "TimeDelay.h"
 #include "Console.h"
 
@@ -809,7 +809,8 @@
             LCDCommand[1] = LCD_WRITE_CMD;
             LCDCommand[2] = LCDCMD_FIRSTLINE_ADDRESS;
             LCDCommand[3] = 32;
-                        I2CWrite(4, 32);
+            
+            I2CWrite(4, 32);
         #else
             BYTE i;
         

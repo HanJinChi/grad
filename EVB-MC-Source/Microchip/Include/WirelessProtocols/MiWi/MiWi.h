@@ -49,9 +49,9 @@
 
 /************************ HEADERS **********************************/
 #include "ConfigApp.h"
-#include "WirelessProtocols\SymbolTime.h"
-#include "Transceivers\Transceivers.h"
-#include "WirelessProtocols\MiWi\ConfigMiWi.h"
+#include "SymbolTime.h"
+#include "Transceivers.h"
+#include "ConfigMiWi.h"
 
 #define INPUT
 #define OUTPUT

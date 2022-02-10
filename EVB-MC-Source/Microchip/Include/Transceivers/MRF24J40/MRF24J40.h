@@ -52,9 +52,9 @@
                         
     #include "GenericTypeDefs.h"
     #include "SystemProfile.h"
-    #include "Transceivers\Transceivers.h"
-    #include "Transceivers\MCHP_MAC.h"    
-    #include "Transceivers\MRF24J40\ConfigMRF24J40.h"
+    #include "Transceivers.h"
+    #include "MCHP_MAC.h"    
+    #include "ConfigMRF24J40.h"
 
     #define SEC_LEVEL_CTR           0
     #define SEC_LEVEL_CBC_MAC_32    1

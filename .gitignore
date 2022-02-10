@@ -1,1 +1,5 @@
-.pdf
+*.pdf
+/EVB-MC-Source/Powercast/Access Point/Access Point.X/build/
+/EVB-MC-Source/Powercast/Access Point/Access Point.X/dist/
+/EVB-MC-Source/Powercast/End Point/End Point.X/build/
+/EVB-MC-Source/Powercast/End Point/End Point.X/dist/
