@@ -236,7 +236,7 @@ int main(void)
 		{
 			// ********* USER CODE ******************
 			modeVal = 1;
-		
+            
 			// Do alternate code.  This is where to put user created code.
 			// Make sure to add user created data to packet below
 		}	
@@ -259,7 +259,7 @@ int main(void)
 	
     	MiApp_SetChannel(myChannel);      // Set default channel
     
-	    MiApp_FlushTx();
+	    MiApp_FlushTx();  // 
 	    MiApp_WriteData(modeVal);
 		MiApp_WriteData(boardID);
 
@@ -272,7 +272,7 @@ int main(void)
     		MiApp_WriteData(rssiValH);
     		MiApp_WriteData(rssiValL);
     
-	    	// Sensor Data
+	    	// Sensor Data  
     		MiApp_WriteData(tempValH);
     		MiApp_WriteData(tempValL);
 	    	MiApp_WriteData(humValH);

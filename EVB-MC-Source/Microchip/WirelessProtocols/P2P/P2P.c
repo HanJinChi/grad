@@ -886,11 +886,11 @@ BOOL MiApp_ProtocolInit(BOOL bNetworkFreezer)
     
     initValue.PAddress = myLongAddress;
     initValue.actionFlags.bits.CCAEnable = 1;
-    initValue.actionFlags.bits.PAddrLength = MY_ADDRESS_LENGTH;
+    initValue.actionFlags.bits.PAddrLength = MY_ADDRESS_LENGTH; 
     initValue.actionFlags.bits.NetworkFreezer = bNetworkFreezer;
     initValue.actionFlags.bits.RepeaterMode = 0;
 
-    MiMAC_Init(initValue);
+    MiMAC_Init(initValue);// Configuration information of MiMac
     
     #if defined(IEEE_802_15_4)
         {

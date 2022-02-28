@@ -1,4 +1,4 @@
-/********************************************************************
+s/********************************************************************
 * FileName:		MRF24J40.c
 * Dependencies:    
 * Processor:	PIC18, PIC24, PIC32, dsPIC30, dsPIC33
@@ -218,7 +218,7 @@
         toReturn = SPIGet();
         PHY_CS = 1;
         RFIE = tmpRFIE;
-        
+    
         return toReturn;
     }
     

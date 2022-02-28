@@ -542,7 +542,7 @@
     
     /************************************************************************************
      * Function:
-     *      BOOL MiApp_BroadcastPacket(BOOL SecEn )
+     *      BOOL MiApp_BroadcastPacket(BOOL SecEn )s
      *
      * Summary:
      *      This function broadcast a message in the TxBuffer.
