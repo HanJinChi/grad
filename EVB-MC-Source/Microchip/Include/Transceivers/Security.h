@@ -46,7 +46,6 @@
 
 #ifndef __SECURITY_H
     #define __SECURITY_H
-//    #define SOFTWARE_SECURITY
     #include "Transceivers.h"
 
     #if defined(SOFTWARE_SECURITY)
@@ -101,4 +100,6 @@
     #endif
 
 #endif
+        
 
+        

@@ -301,11 +301,32 @@ int main(void)
         /*******************************************************************/
         if ( MiApp_MessageAvailable() )
         {
+            ConsolePutROMString((ROM char*)"PayloadSize is ");
+            ConsolePut(rxMessage.PayloadSize+'0');
+            ConsolePutROMString((ROM char*)"\r\n");
+            
+            BYTE SimonKey[] = {0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xa,0xb};
+            if(Simon6496CcmDec(rxMessage.Payload,rxMessage.PayloadSize,SimonKey)){
+                ConsolePutROMString((ROM char*)"DEC SUCCESS!\n");
+                ConsolePutROMString((ROM char*)"\r\n");
+                ConsolePutROMString((ROM char*)"data is :");
+                for(int i = 0;i<rxMessage.PayloadSize;i++){
+                    ConsolePut(rxMessage.Payload[i]+'0');
+                }
+                ConsolePutROMString((ROM char*)"\r\n");
+            }
+            else{
+                ConsolePutROMString((ROM char*)"DEC Fail!\n");
+                ConsolePutROMString((ROM char*)"\r\n");
+            }
+            
+            
+            
 	        // Increment Packet counter
         	Packet++;
         	if (Packet == 100000)		// only displaying 5 digits, roll over
         		Packet = 0;
-
+            /*
 	        // Mode of the board that sent the packet
 	        boardMode = rxMessage.Payload[0];
 	        
@@ -400,7 +421,7 @@ int main(void)
 
        		// Print data to terminal window, based on boardMode
            	PrintScreen();
-            	
+            */
            	// Reset time between packets
            	Sec_between_packet[nodeID] = 0;
             
@@ -522,374 +543,381 @@ void _ISRFAST __attribute__((interrupt, auto_psv)) _T1Interrupt(void)
 *
 * Note:			    
 **********************************************************************/
+/*
+ *  In order to save the space of flash memory, comment out the function PrintScreen function  temporarily
+ *  author: hanjinchi
+ *  time: 2022/3/4
+*/
+
 void PrintScreen(void)
 {
-	ConsolePutROMString((ROM char*)"\r\n");
-
-   	// Check Mode of sensor board
-   	if (boardMode == 0)
-	{
-		// ********* NORMAL MODE **************
-		
-		// Display all packet info on 2 lines
-		
-   		// Packet Count
-    	ConsolePutROMString((ROM char*)"Packet #");
-            
-    	if ((Packet / 10000) != 0) 
-		{
-    		ConsolePut((Packet / 10000) % 10 + '0');
-			ConsolePut((Packet / 1000) % 10 + '0');
-			ConsolePut((Packet / 100) % 10 + '0');
-    		ConsolePut((Packet / 10) % 10 + '0');
-    	}
-    	else 
-   		{ 
-       		ConsolePut(' ');
-		    	    
-       		if ((Packet / 1000) != 0) 
-	   		{
-    			ConsolePut((Packet / 1000) % 10 + '0');
-   	   			ConsolePut((Packet / 100) % 10 + '0');
-   	   			ConsolePut((Packet / 10) % 10 + '0');
-    		}
-       		else
-       		{
-     			ConsolePut(' ');
-		    			
-        		if ((Packet / 100) != 0) 
-		   		{
-    				ConsolePut((Packet / 100) % 10 + '0');
-	   	   			ConsolePut((Packet / 10) % 10 + '0');
-	   			}
-       			else
-       			{
-	    			ConsolePut(' ');
-
-	   	   			if ((Packet / 10) != 0)
-	   	   				ConsolePut((Packet / 10) % 10 + '0');
-	   	   			else
-		   				ConsolePut(' ');
-		   		}
-			}
-		}
-   		ConsolePut(Packet % 10 + '0');
-   		
-   		ConsolePutROMString((ROM char*)" | ");
-
-
-		// Node ID
-		ConsolePutROMString((ROM char*)"Node   ");
-
-    	ConsolePut(nodeID % 10 + '0');
-
-   		ConsolePutROMString((ROM char*)" | ");
-   	
-   			
-	   	// TX ID
-	    ConsolePutROMString((ROM char*)"TX ID  ");	
-	    
-	    if (TXID == 0xFF || TXID == 0x00)	// check for valid data
-	    	ConsolePutROMString((ROM char*)"---");
-        
-        else 
-        {
-			ConsolePut((TXID / 100) % 10 + '0');
-    		ConsolePut((TXID / 10) % 10 + '0');
-			ConsolePut(TXID % 10 + '0');
-	    }
-  		ConsolePutROMString((ROM char*)"   | ");
-
-
-        // Temperature sensor
-        ConsolePutROMString((ROM char*)"Temp  ");
-        
-        if (tempVal < 250 || tempVal > 1250)			// check for valid data, 25 < T < 125
-	    	ConsolePutROMString((ROM char*)"-----");
-
-		else
-		{
-        	if ((tempVal / 1000) != 0) 
-        	{
-       	    	ConsolePut((tempVal / 1000) % 10 + '0');
-   	        	ConsolePut((tempVal / 100) % 10 + '0');
-           		ConsolePut((tempVal / 10) % 10 + '0');
-        	}
-        	else 
-        	{ 
-          		ConsolePut(' ');
-                                 
-	        	if ((tempVal / 100) != 0) 
-		    	{
-           			ConsolePut((tempVal / 100) % 10 + '0');
-					ConsolePut((tempVal / 10) % 10 + '0');
-            	}
-   	        	else 
-    	    	{ 
-            		ConsolePut(' ');
-	    	    
-	        		if ((tempVal / 10) != 0) 
-           				ConsolePut((tempVal / 10) % 10 + '0');
-       				else
-	     				ConsolePut(' ');
-				}
-			}
-			ConsolePut('.');
-   			ConsolePut(tempVal % 10 + '0');
-		}
-        ConsolePutROMString((ROM char*)" F | ");
-
-
-       	// Light Sensor
-        ConsolePutROMString((ROM char*)"Light ");
-        
-        if (lightVal < 10)								// check for valid data
-	    	ConsolePutROMString((ROM char*)"-----");
-	    	
-	    else
-	    {
-    	    if ((lightVal / 10000) != 0) 
-	    	{
-       			ConsolePut((lightVal / 10000) % 10 + '0');
-       			ConsolePut((lightVal / 1000) % 10 + '0');
-       			ConsolePut((lightVal / 100) % 10 + '0');
-       			ConsolePut((lightVal / 10) % 10 + '0');
-        	}
-	        else 
-   		    { 
-        	 	ConsolePut(' ');
-	    	    
-	        	if ((lightVal / 1000) != 0) 
-	        	{
-	       			ConsolePut((lightVal / 1000) % 10 + '0');
-    	   			ConsolePut((lightVal / 100) % 10 + '0');
-       				ConsolePut((lightVal / 10) % 10 + '0');
-				}
-   				else
-   				{
-     				ConsolePut(' ');
-
-	        		if ((lightVal / 100) != 0) 
-	        		{
-		       			ConsolePut((lightVal / 100) % 10 + '0');
-       					ConsolePut((lightVal / 10) % 10 + '0');
-					}
-					else
-					{
-						ConsolePut(' ');
-
-           				if ((lightVal / 10) != 0) 
-           					ConsolePut((lightVal / 10) % 10 + '0');
-       					else
-	     					ConsolePut(' ');
-					}
-				}
-			}
-			ConsolePut(lightVal % 10 + '0');
- 		}
-        ConsolePutROMString((ROM char*)" lx");
-
-
-		// NEW LINE
-   		ConsolePutROMString((ROM char*)"\r\n");
-
-		
-        // Time Display
-	    ConsolePutROMString((ROM char*)"Time ");
-        
-       	ConsolePut((total_time_hr / 10) % 10 + '0');
-       	ConsolePut(total_time_hr % 10 + '0');
-    	
-	    ConsolePutROMString((ROM char*)":");
-
-       	ConsolePut((total_time_min / 10) % 10 + '0');
-       	ConsolePut(total_time_min % 10 + '0');
-    	
-	    ConsolePutROMString((ROM char*)":");
-
-       	ConsolePut((total_time_sec / 10) % 10 + '0');
-       	ConsolePut(total_time_sec % 10 + '0');
-    	
-        ConsolePutROMString((ROM char*)" | ");
-    	
-
-    	// Seconds between packets
-	    ConsolePutROMString((ROM char*)"dT ");
-            
-       	ConsolePut((delta_time_min / 10) % 10 + '0');
-       	ConsolePut(delta_time_min % 10 + '0');
-    	
-	    ConsolePutROMString((ROM char*)":");
-
-       	ConsolePut((delta_time_sec / 10) % 10 + '0');
-       	ConsolePut(delta_time_sec % 10 + '0');
-    	
-        ConsolePutROMString((ROM char*)" | ");
-
-
-		// RSSI
-        ConsolePutROMString((ROM char*)"RSSI ");
-            
-        if (rssiVal < 4)								// check for valid data
-	    	ConsolePutROMString((ROM char*)" --- ");
-	    	
-	    else
-	    {
-       		if ((rssiVal / 1000) != 0) 
-   				ConsolePut((rssiVal / 1000) % 10 + '0');
-			else
-    			ConsolePut(' ');
-                       
-        	ConsolePut((rssiVal / 100) % 10 + '0');
-			ConsolePut('.');
-        	ConsolePut((rssiVal / 10) % 10 + '0');
-        	ConsolePut(rssiVal % 10 + '0');
-     	}   	
-        ConsolePutROMString((ROM char*)"mW | ");
-
-
-        // Humidity Sensor
-        ConsolePutROMString((ROM char*)"Humidity ");
-
-        if (humVal < 15 || humVal > 85)				// check for valid data
-	    	ConsolePutROMString((ROM char*)"--");
-
-		else
-		{
-  			ConsolePut((humVal / 10) % 10 + '0');
-			ConsolePut(humVal % 10 + '0');
-  		}      	
-        ConsolePutROMString((ROM char*)" % | ");
-
- 
-        // External Sensor
-        ConsolePutROMString((ROM char*)"Extrnl ");
-
-        if ((extVal / 1000) != 0) 
-        {
-           	ConsolePut((extVal / 1000) % 10 + '0');
-           	ConsolePut((extVal / 100) % 10 + '0');
-           	ConsolePut((extVal / 10) % 10 + '0');
-        }
-        else 
-        { 
-          	ConsolePut(' ');
-                                 
-	        if ((extVal / 100) != 0) 
-		    {
-           		ConsolePut((extVal / 100) % 10 + '0');
-           		ConsolePut((extVal / 10) % 10 + '0');
-            }
-   	        else 
-    	    { 
-            	ConsolePut(' ');
-	    	    
-	        	if ((extVal / 10) != 0) 
-           			ConsolePut((extVal / 10) % 10 + '0');
-       			else
-	     			ConsolePut(' ');
-			}
-		}
-        ConsolePut(extVal % 10 + '0');
-            
-        ConsolePutROMString((ROM char*)" mV");
-    }
-    else
-    {
-	    // ************ USER MODE ******************
-		
-		// Display user created content here
-		// This section shows the Packet count, Node ID and Time info
-		
-   		// Packet Count
-    	ConsolePutROMString((ROM char*)"Packet #");
-            
-    	if ((Packet / 10000) != 0) 
-		{
-    		ConsolePut((Packet / 10000) % 10 + '0');
-			ConsolePut((Packet / 1000) % 10 + '0');
-			ConsolePut((Packet / 100) % 10 + '0');
-    		ConsolePut((Packet / 10) % 10 + '0');
-    	}
-    	else 
-   		{ 
-       		ConsolePut(' ');
-		    	    
-       		if ((Packet / 1000) != 0) 
-	   		{
-    			ConsolePut((Packet / 1000) % 10 + '0');
-   	   			ConsolePut((Packet / 100) % 10 + '0');
-   	   			ConsolePut((Packet / 10) % 10 + '0');
-    		}
-       		else
-       		{
-     			ConsolePut(' ');
-		    			
-        		if ((Packet / 100) != 0) 
-		   		{
-    				ConsolePut((Packet / 100) % 10 + '0');
-	   	   			ConsolePut((Packet / 10) % 10 + '0');
-	   			}
-       			else
-       			{
-	    			ConsolePut(' ');
-
-	   	   			if ((Packet / 10) != 0)
-	   	   				ConsolePut((Packet / 10) % 10 + '0');
-	   	   			else
-		   				ConsolePut(' ');
-		   		}
-			}
-		}
-   		ConsolePut(Packet % 10 + '0');
-   		
-   		ConsolePutROMString((ROM char*)" | ");
-
-
-		// Node ID
-		ConsolePutROMString((ROM char*)"Node   ");
-
-    	ConsolePut(nodeID % 10 + '0');
-
-   		ConsolePutROMString((ROM char*)" | ");
-
-
-		// Nothing else implemented in the Mode
-		ConsolePutROMString((ROM char*)"This mode not implemented\r\n");
-		
-        // Time Display
-	    ConsolePutROMString((ROM char*)"Time ");
-        
-       	ConsolePut((total_time_hr / 10) % 10 + '0');
-       	ConsolePut(total_time_hr % 10 + '0');
-    	
-	    ConsolePutROMString((ROM char*)":");
-
-       	ConsolePut((total_time_min / 10) % 10 + '0');
-       	ConsolePut(total_time_min % 10 + '0');
-    	
-	    ConsolePutROMString((ROM char*)":");
-
-       	ConsolePut((total_time_sec / 10) % 10 + '0');
-       	ConsolePut(total_time_sec % 10 + '0');
-    	
-        ConsolePutROMString((ROM char*)" | ");
-    	
-
-    	// Seconds between packets
-	    ConsolePutROMString((ROM char*)"dT ");
-            
-       	ConsolePut((delta_time_min / 10) % 10 + '0');
-       	ConsolePut(delta_time_min % 10 + '0');
-    	
-	    ConsolePutROMString((ROM char*)":");
-
-       	ConsolePut((delta_time_sec / 10) % 10 + '0');
-       	ConsolePut(delta_time_sec % 10 + '0');
-    	
-        ConsolePutROMString((ROM char*)" | ");
-    }    
-   	ConsolePutROMString((ROM char*)"\r\n");
+    return ;
+//	ConsolePutROMString((ROM char*)"\r\n");
+//
+//   	// Check Mode of sensor board
+//   	if (boardMode == 0)
+//	{
+//		// ********* NORMAL MODE **************
+//		
+//		// Display all packet info on 2 lines
+//		
+//   		// Packet Count
+//    	ConsolePutROMString((ROM char*)"Packet #");
+//            
+//    	if ((Packet / 10000) != 0) 
+//		{
+//    		ConsolePut((Packet / 10000) % 10 + '0');
+//			ConsolePut((Packet / 1000) % 10 + '0');
+//			ConsolePut((Packet / 100) % 10 + '0');
+//    		ConsolePut((Packet / 10) % 10 + '0');
+//    	}
+//    	else 
+//   		{ 
+//       		ConsolePut(' ');
+//		    	    
+//       		if ((Packet / 1000) != 0) 
+//	   		{
+//    			ConsolePut((Packet / 1000) % 10 + '0');
+//   	   			ConsolePut((Packet / 100) % 10 + '0');
+//   	   			ConsolePut((Packet / 10) % 10 + '0');
+//    		}
+//       		else
+//       		{
+//     			ConsolePut(' ');
+//		    			
+//        		if ((Packet / 100) != 0) 
+//		   		{
+//    				ConsolePut((Packet / 100) % 10 + '0');
+//	   	   			ConsolePut((Packet / 10) % 10 + '0');
+//	   			}
+//       			else
+//       			{
+//	    			ConsolePut(' ');
+//
+//	   	   			if ((Packet / 10) != 0)
+//	   	   				ConsolePut((Packet / 10) % 10 + '0');
+//	   	   			else
+//		   				ConsolePut(' ');
+//		   		}
+//			}
+//		}
+//   		ConsolePut(Packet % 10 + '0');
+//   		
+//   		ConsolePutROMString((ROM char*)" | ");
+//
+//
+//		// Node ID
+//		ConsolePutROMString((ROM char*)"Node   ");
+//
+//    	ConsolePut(nodeID % 10 + '0');
+//
+//   		ConsolePutROMString((ROM char*)" | ");
+//   	
+//   			
+//	   	// TX ID
+//	    ConsolePutROMString((ROM char*)"TX ID  ");	
+//	    
+//	    if (TXID == 0xFF || TXID == 0x00)	// check for valid data
+//	    	ConsolePutROMString((ROM char*)"---");
+//        
+//        else 
+//        {
+//			ConsolePut((TXID / 100) % 10 + '0');
+//    		ConsolePut((TXID / 10) % 10 + '0');
+//			ConsolePut(TXID % 10 + '0');
+//	    }
+//  		ConsolePutROMString((ROM char*)"   | ");
+//
+//
+//        // Temperature sensor
+//        ConsolePutROMString((ROM char*)"Temp  ");
+//        
+//        if (tempVal < 250 || tempVal > 1250)			// check for valid data, 25 < T < 125
+//	    	ConsolePutROMString((ROM char*)"-----");
+//
+//		else
+//		{
+//        	if ((tempVal / 1000) != 0) 
+//        	{
+//       	    	ConsolePut((tempVal / 1000) % 10 + '0');
+//   	        	ConsolePut((tempVal / 100) % 10 + '0');
+//           		ConsolePut((tempVal / 10) % 10 + '0');
+//        	}
+//        	else 
+//        	{ 
+//          		ConsolePut(' ');
+//                                 
+//	        	if ((tempVal / 100) != 0) 
+//		    	{
+//           			ConsolePut((tempVal / 100) % 10 + '0');
+//					ConsolePut((tempVal / 10) % 10 + '0');
+//            	}
+//   	        	else 
+//    	    	{ 
+//            		ConsolePut(' ');
+//	    	    
+//	        		if ((tempVal / 10) != 0) 
+//           				ConsolePut((tempVal / 10) % 10 + '0');
+//       				else
+//	     				ConsolePut(' ');
+//				}
+//			}
+//			ConsolePut('.');
+//   			ConsolePut(tempVal % 10 + '0');
+//		}
+//        ConsolePutROMString((ROM char*)" F | ");
+//
+//
+//       	// Light Sensor
+//        ConsolePutROMString((ROM char*)"Light ");
+//        
+//        if (lightVal < 10)								// check for valid data
+//	    	ConsolePutROMString((ROM char*)"-----");
+//	    	
+//	    else
+//	    {
+//    	    if ((lightVal / 10000) != 0) 
+//	    	{
+//       			ConsolePut((lightVal / 10000) % 10 + '0');
+//       			ConsolePut((lightVal / 1000) % 10 + '0');
+//       			ConsolePut((lightVal / 100) % 10 + '0');
+//       			ConsolePut((lightVal / 10) % 10 + '0');
+//        	}
+//	        else 
+//   		    { 
+//        	 	ConsolePut(' ');
+//	    	    
+//	        	if ((lightVal / 1000) != 0) 
+//	        	{
+//	       			ConsolePut((lightVal / 1000) % 10 + '0');
+//    	   			ConsolePut((lightVal / 100) % 10 + '0');
+//       				ConsolePut((lightVal / 10) % 10 + '0');
+//				}
+//   				else
+//   				{
+//     				ConsolePut(' ');
+//
+//	        		if ((lightVal / 100) != 0) 
+//	        		{
+//		       			ConsolePut((lightVal / 100) % 10 + '0');
+//       					ConsolePut((lightVal / 10) % 10 + '0');
+//					}
+//					else
+//					{
+//						ConsolePut(' ');
+//
+//           				if ((lightVal / 10) != 0) 
+//           					ConsolePut((lightVal / 10) % 10 + '0');
+//       					else
+//	     					ConsolePut(' ');
+//					}
+//				}
+//			}
+//			ConsolePut(lightVal % 10 + '0');
+// 		}
+//        ConsolePutROMString((ROM char*)" lx");
+//
+//
+//		// NEW LINE
+//   		ConsolePutROMString((ROM char*)"\r\n");
+//
+//		
+//        // Time Display
+//	    ConsolePutROMString((ROM char*)"Time ");
+//        
+//       	ConsolePut((total_time_hr / 10) % 10 + '0');
+//       	ConsolePut(total_time_hr % 10 + '0');
+//    	
+//	    ConsolePutROMString((ROM char*)":");
+//
+//       	ConsolePut((total_time_min / 10) % 10 + '0');
+//       	ConsolePut(total_time_min % 10 + '0');
+//    	
+//	    ConsolePutROMString((ROM char*)":");
+//
+//       	ConsolePut((total_time_sec / 10) % 10 + '0');
+//       	ConsolePut(total_time_sec % 10 + '0');
+//    	
+//        ConsolePutROMString((ROM char*)" | ");
+//    	
+//
+//    	// Seconds between packets
+//	    ConsolePutROMString((ROM char*)"dT ");
+//            
+//       	ConsolePut((delta_time_min / 10) % 10 + '0');
+//       	ConsolePut(delta_time_min % 10 + '0');
+//    	
+//	    ConsolePutROMString((ROM char*)":");
+//
+//       	ConsolePut((delta_time_sec / 10) % 10 + '0');
+//       	ConsolePut(delta_time_sec % 10 + '0');
+//    	
+//        ConsolePutROMString((ROM char*)" | ");
+//
+//
+//		// RSSI
+//        ConsolePutROMString((ROM char*)"RSSI ");
+//            
+//        if (rssiVal < 4)								// check for valid data
+//	    	ConsolePutROMString((ROM char*)" --- ");
+//	    	
+//	    else
+//	    {
+//       		if ((rssiVal / 1000) != 0) 
+//   				ConsolePut((rssiVal / 1000) % 10 + '0');
+//			else
+//    			ConsolePut(' ');
+//                       
+//        	ConsolePut((rssiVal / 100) % 10 + '0');
+//			ConsolePut('.');
+//        	ConsolePut((rssiVal / 10) % 10 + '0');
+//        	ConsolePut(rssiVal % 10 + '0');
+//     	}   	
+//        ConsolePutROMString((ROM char*)"mW | ");
+//
+//
+//        // Humidity Sensor
+//        ConsolePutROMString((ROM char*)"Humidity ");
+//
+//        if (humVal < 15 || humVal > 85)				// check for valid data
+//	    	ConsolePutROMString((ROM char*)"--");
+//
+//		else
+//		{
+//  			ConsolePut((humVal / 10) % 10 + '0');
+//			ConsolePut(humVal % 10 + '0');
+//  		}      	
+//        ConsolePutROMString((ROM char*)" % | ");
+//
+// 
+//        // External Sensor
+//        ConsolePutROMString((ROM char*)"Extrnl ");
+//
+//        if ((extVal / 1000) != 0) 
+//        {
+//           	ConsolePut((extVal / 1000) % 10 + '0');
+//           	ConsolePut((extVal / 100) % 10 + '0');
+//           	ConsolePut((extVal / 10) % 10 + '0');
+//        }
+//        else 
+//        { 
+//          	ConsolePut(' ');
+//                                 
+//	        if ((extVal / 100) != 0) 
+//		    {
+//           		ConsolePut((extVal / 100) % 10 + '0');
+//           		ConsolePut((extVal / 10) % 10 + '0');
+//            }
+//   	        else 
+//    	    { 
+//            	ConsolePut(' ');
+//	    	    
+//	        	if ((extVal / 10) != 0) 
+//           			ConsolePut((extVal / 10) % 10 + '0');
+//       			else
+//	     			ConsolePut(' ');
+//			}
+//		}
+//        ConsolePut(extVal % 10 + '0');
+//            
+//        ConsolePutROMString((ROM char*)" mV");
+//    }
+//    else
+//    {
+//	    // ************ USER MODE ******************
+//		
+//		// Display user created content here
+//		// This section shows the Packet count, Node ID and Time info
+//		
+//   		// Packet Count
+//    	ConsolePutROMString((ROM char*)"Packet #");
+//            
+//    	if ((Packet / 10000) != 0) 
+//		{
+//    		ConsolePut((Packet / 10000) % 10 + '0');
+//			ConsolePut((Packet / 1000) % 10 + '0');
+//			ConsolePut((Packet / 100) % 10 + '0');
+//    		ConsolePut((Packet / 10) % 10 + '0');
+//    	}
+//    	else 
+//   		{ 
+//       		ConsolePut(' ');
+//		    	    
+//       		if ((Packet / 1000) != 0) 
+//	   		{
+//    			ConsolePut((Packet / 1000) % 10 + '0');
+//   	   			ConsolePut((Packet / 100) % 10 + '0');
+//   	   			ConsolePut((Packet / 10) % 10 + '0');
+//    		}
+//       		else
+//       		{
+//     			ConsolePut(' ');
+//		    			
+//        		if ((Packet / 100) != 0) 
+//		   		{
+//    				ConsolePut((Packet / 100) % 10 + '0');
+//	   	   			ConsolePut((Packet / 10) % 10 + '0');
+//	   			}
+//       			else
+//       			{
+//	    			ConsolePut(' ');
+//
+//	   	   			if ((Packet / 10) != 0)
+//	   	   				ConsolePut((Packet / 10) % 10 + '0');
+//	   	   			else
+//		   				ConsolePut(' ');
+//		   		}
+//			}
+//		}
+//   		ConsolePut(Packet % 10 + '0');
+//   		
+//   		ConsolePutROMString((ROM char*)" | ");
+//
+//
+//		// Node ID
+//		ConsolePutROMString((ROM char*)"Node   ");
+//
+//    	ConsolePut(nodeID % 10 + '0');
+//
+//   		ConsolePutROMString((ROM char*)" | ");
+//
+//
+//		// Nothing else implemented in the Mode
+//		ConsolePutROMString((ROM char*)"This mode not implemented\r\n");
+//		
+//        // Time Display
+//	    ConsolePutROMString((ROM char*)"Time ");
+//        
+//       	ConsolePut((total_time_hr / 10) % 10 + '0');
+//       	ConsolePut(total_time_hr % 10 + '0');
+//    	
+//	    ConsolePutROMString((ROM char*)":");
+//
+//       	ConsolePut((total_time_min / 10) % 10 + '0');
+//       	ConsolePut(total_time_min % 10 + '0');
+//    	
+//	    ConsolePutROMString((ROM char*)":");
+//
+//       	ConsolePut((total_time_sec / 10) % 10 + '0');
+//       	ConsolePut(total_time_sec % 10 + '0');
+//    	
+//        ConsolePutROMString((ROM char*)" | ");
+//    	
+//
+//    	// Seconds between packets
+//	    ConsolePutROMString((ROM char*)"dT ");
+//            
+//       	ConsolePut((delta_time_min / 10) % 10 + '0');
+//       	ConsolePut(delta_time_min % 10 + '0');
+//    	
+//	    ConsolePutROMString((ROM char*)":");
+//
+//       	ConsolePut((delta_time_sec / 10) % 10 + '0');
+//       	ConsolePut(delta_time_sec % 10 + '0');
+//    	
+//        ConsolePutROMString((ROM char*)" | ");
+//    }    
+//   	ConsolePutROMString((ROM char*)"\r\n");
 }	
 
 /*********************************************************************

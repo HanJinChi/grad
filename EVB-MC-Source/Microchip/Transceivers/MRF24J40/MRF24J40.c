@@ -1,4 +1,4 @@
-s/********************************************************************
+/********************************************************************
 * FileName:		MRF24J40.c
 * Dependencies:    
 * Processor:	PIC18, PIC24, PIC32, dsPIC30, dsPIC33
@@ -218,7 +218,7 @@ s/********************************************************************
         toReturn = SPIGet();
         PHY_CS = 1;
         RFIE = tmpRFIE;
-    
+        
         return toReturn;
     }
     
@@ -716,14 +716,14 @@ s/********************************************************************
     
         if( transParam.flags.bits.broadcast )
         {
-            transParam.altDestAddr = TRUE;
+            transParam.altDestAddr = TRUE; // pass if 
         }
         
         if( transParam.flags.bits.secEn )
         {
             transParam.altSrcAddr = FALSE;
         }
-        
+        // altDestAddr = 1 , altSrcAddr = 1
     
         // wait for the previous transmission finish
         #if !defined(VERIFY_TRANSMIT)
@@ -809,7 +809,7 @@ s/********************************************************************
         }
         
         // use PACKET_TYPE_RESERVE to represent beacon. Fixed format for beacon packet
-        if( transParam.flags.bits.packetType == PACKET_TYPE_RESERVE)
+        if( transParam.flags.bits.packetType == PACKET_TYPE_RESERVE)  //  send data don't pass the if 
         {
             i = 0x00;
             headerLength = 7;
@@ -831,7 +831,7 @@ s/********************************************************************
             else
         #endif
         {
-            PHYSetLongRAMAddr(loc++, headerLength + MACPayloadLen);
+            PHYSetLongRAMAddr(loc++, headerLength + MACPayloadLen);  //  MACPayloadLen = Txdata (buffer size) time:2022/3/6 
         }
         
         // set frame control LSB
@@ -848,11 +848,11 @@ s/********************************************************************
         {
             if( transParam.altDestAddr && transParam.altSrcAddr )
             {
-                PHYSetLongRAMAddr(loc++, 0x88);
+                PHYSetLongRAMAddr(loc++, 0x88); // pass if
             }
             else if( transParam.altDestAddr && transParam.altSrcAddr == 0 )
             {
-                PHYSetLongRAMAddr(loc++, 0xC8);
+                PHYSetLongRAMAddr(loc++, 0xC8); 
             }
             else if( transParam.altDestAddr == 0 && transParam.altSrcAddr == 1 )
             {
@@ -873,14 +873,14 @@ s/********************************************************************
             // destination address
             if( transParam.flags.bits.broadcast )
             {
-                PHYSetLongRAMAddr(loc++, 0xFF);
+                PHYSetLongRAMAddr(loc++, 0xFF);  // pass if 
                 PHYSetLongRAMAddr(loc++, 0xFF);
             }
             else
             {
                 if( transParam.altDestAddr )
                 {
-                    PHYSetLongRAMAddr(loc++, transParam.DestAddress[0]);
+                    PHYSetLongRAMAddr(loc++, transParam.DestAddress[0]);  // pass if
                     PHYSetLongRAMAddr(loc++, transParam.DestAddress[1]);
                 }
                 else
@@ -905,7 +905,7 @@ s/********************************************************************
         // source address
         if( transParam.altSrcAddr )
         {
-            PHYSetLongRAMAddr(loc++, myNetworkAddress.v[0]);
+            PHYSetLongRAMAddr(loc++, myNetworkAddress.v[0]);  // pass if
             PHYSetLongRAMAddr(loc++, myNetworkAddress.v[1]);
         }
         else

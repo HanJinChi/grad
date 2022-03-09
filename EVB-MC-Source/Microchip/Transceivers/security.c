@@ -54,14 +54,14 @@
 
 #include "SystemProfile.h"
 #include "Transceivers.h"
-
+#include "Transceivers/Security.h" 
 #if defined(SOFTWARE_SECURITY) && defined(ENABLE_SECURITY)
 
     #include "GenericTypeDefs.h"
     #include "Transceivers\Security.h"                                
     #include "Console.h"
     
-    BYTE tmpBlock[BLOCK_SIZE];
+    BYTE n[BLOCK_SIZE];
         
     #if defined(XTEA_128)
 		 /**************************************************************************
@@ -145,7 +145,7 @@
      ********************************************************************/
     void CTR(IOPUT BYTE *text, BYTE len, BYTE *key, BYTE *nounce)
     {
-        BYTE block = len/BLOCK_SIZE+1;
+        BYTE block = len/BLOCK_SIZE+1;      // len is the length of the array of text
         BYTE i, j;
         #if defined(__18CXX)
             BYTE ITStatus = INTCONbits.GIEH;
@@ -160,7 +160,7 @@
                 tmpBlock[j] = nounce[j];
             }
             tmpBlock[BLOCK_SIZE-1] = i;
-            encode((BLOCK_UNIT *)tmpBlock, (BLOCK_UNIT *)key);
+            encode((BLOCK_UNIT *)tmpBlock, (BLOCK_UNIT *)key);  // BLOCK_UNIT: WORD           time:2022/3/3
             for(j = 0; j < BLOCK_SIZE; j++)
             {
                 if( (i * BLOCK_SIZE + j) >= len )
@@ -359,4 +359,5 @@
 #endif
 
 extern char bogus;
+
 

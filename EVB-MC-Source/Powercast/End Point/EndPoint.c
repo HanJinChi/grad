@@ -152,7 +152,6 @@ BYTE myChannel = 25;
 int main(void)
 {   
     int i;
-	    
     // Initialize the system
     BoardInit();      
 	GetBoardID();
@@ -266,6 +265,7 @@ int main(void)
 		// Check Mode select pin 
 	    if(MODE == 0)					// if mode jumper is off send rest of data
     	{
+            /*
     		MiApp_WriteData(TXID);
 	    	MiApp_WriteData(vddValH);
     		MiApp_WriteData(vddValL);
@@ -281,11 +281,22 @@ int main(void)
 	    	MiApp_WriteData(lightValL);
     		MiApp_WriteData(extValH);
     		MiApp_WriteData(extValL);
+            */
+            
+            
+            for(int i = 1;i <= 6;i++){
+                MiApp_WriteData(i);
+            }
+            BYTE SimonKey[] = {0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xa,0xb};
+            Simon6496CcmEnc(TxBuffer,TxData,SimonKey);
+            TxData += BLOCK_SIZE;
     	}
     	else
+            
     	{
 	    	// Add user created data to packet
-		} 
+		}
+        
 
 		// Send Packet
     	MiApp_BroadcastPacket(FALSE);

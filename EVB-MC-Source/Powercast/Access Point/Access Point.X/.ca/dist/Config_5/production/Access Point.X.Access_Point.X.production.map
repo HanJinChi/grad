@@ -1,0 +1,115 @@
+Microchip Technology Inc, v2.00 (B)
+
+Tool Name:
+  /Applications/microchip/xc16/v2.00/bin/bin/../bin/elf-ld
+
+Command:
+  -p24F16KA102 \
+  --mdfp=/Applications/microchip/mplabx/v6.00/packs/Microchip/PIC24F-KA-KL-KM_DFP/1.4.83/xc16 \
+  -o \
+  .ca/dist/Config_5/production/Access_Point.X.production.elf \
+  -L/Applications/microchip/xc16/v2.00/bin/bin/.. \
+  -L/Applications/microchip/mplabx/v6.00/packs/Microchip/PIC24F-KA-KL-KM_DFP/1.4.83/xc16/bin/../support/PIC24F/gld \
+  -L/Applications/microchip/xc16/v2.00/bin/bin/../../lib \
+  -L/Applications/microchip/xc16/v2.00/bin/bin/../../support/PIC24E/gld \
+  -L/Applications/microchip/xc16/v2.00/bin/bin/../../support/PIC24F/gld \
+  -L/Applications/microchip/xc16/v2.00/bin/bin/../../support/PIC24H/gld \
+  -L/Applications/microchip/xc16/v2.00/bin/bin/../../support/dsPIC30F/gld \
+  -L/Applications/microchip/xc16/v2.00/bin/bin/../../support/dsPIC33C/gld \
+  -L/Applications/microchip/xc16/v2.00/bin/bin/../../support/dsPIC33E/gld \
+  -L/Applications/microchip/xc16/v2.00/bin/bin/../../support/dsPIC33F/gld \
+  .ca/build/Config_5/production/_ext/1472/HardwareProfile.o \
+  .ca/build/Config_5/production/_ext/1472/AccessPoint.o \
+  .ca/build/Config_5/production/_ext/1860783399/Console.o \
+  .ca/build/Config_5/production/_ext/1860783399/MSPI.o \
+  .ca/build/Config_5/production/_ext/1860783399/TimeDelay.o \
+  .ca/build/Config_5/production/_ext/35256690/MiWi.o \
+  .ca/build/Config_5/production/_ext/1109514802/P2P.o \
+  .ca/build/Config_5/production/_ext/1466186449/LCDBlocking.o \
+  .ca/build/Config_5/production/_ext/1466186449/NVM.o \
+  .ca/build/Config_5/production/_ext/1466186449/SymbolTime.o \
+  .ca/build/Config_5/production/_ext/1127682237/crc.o \
+  .ca/build/Config_5/production/_ext/1127682237/security.o \
+  .ca/build/Config_5/production/_ext/1061806389/MRF24J40.o \
+  .ca/build/Config_5/production/_ext/1696884637/MRF49XA.o \
+  .ca/build/Config_5/production/_ext/1697003801/MRF89XA.o \
+  --defsym=__MPLAB_BUILD=1 \
+  -Tp24F16KA102.gld.00 \
+  --stack=16 \
+  --check-sections \
+  --data-init \
+  --pack-data \
+  --handles \
+  --isr \
+  --no-gc-sections \
+  --fill-upper=0 \
+  --stackguard=16 \
+  --library-path=.. \
+  --library-path=. \
+  --no-force-link \
+  --smart-io \
+  -Map=.ca/dist/Config_5/production/Access Point.X.Access_Point.X.production.map \
+  --memorysummary \
+  .ca/dist/Config_5/production/memoryfile.xml \
+  -start-group \
+  --library=c99-pic30-elf \
+  --library=m-elf \
+  --library=c99-elf \
+  -end-group \
+
+
+Optional library libpPIC24Fxxx.a not found
+Archive member included because of file (symbol)
+
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(crt0_standard.o)
+                              (__resetPRI)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(data_init_standard.o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(crt0_standard.o) (__data_init_standard)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(crt_start_mode_normal.Meo)
+                              (__crt_start_mode_normal)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(divsi3.XX_o)
+                              .ca/build/Config_5/production/_ext/1472/AccessPoint.o (___divsi3)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(fixunssfsi.XX_o)
+                              .ca/build/Config_5/production/_ext/1472/AccessPoint.o (___fixunssfsi)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(floatunsisf.XX_o)
+                              .ca/build/Config_5/production/_ext/1472/AccessPoint.o (___floatunsisf)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(funpack.XX_o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(fixunssfsi.XX_o) (__funpack)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(modsi3.XX_o)
+                              .ca/build/Config_5/production/_ext/1472/AccessPoint.o (___modsi3)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(udivsi3.XX_o)
+                              .ca/build/Config_5/production/_ext/1472/AccessPoint.o (___udivsi3)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(umodsi3.XX_o)
+                              .ca/build/Config_5/production/_ext/1472/AccessPoint.o (___umodsi3)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(addsf3x.XX_o)
+                              .ca/build/Config_5/production/_ext/1472/AccessPoint.o (___subsf3)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(divsf3x.XX_o)
+                              .ca/build/Config_5/production/_ext/1472/AccessPoint.o (___divsf3)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(mulsf3x.XX_o)
+                              .ca/build/Config_5/production/_ext/1472/AccessPoint.o (___mulsf3)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(dnrmpackfx.XX_o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(addsf3x.XX_o) (__dnrmpackf)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(unpackdnrmfx.XX_o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(mulsf3x.XX_o) (__unpackdnrmf)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(typefx.XX_o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(addsf3x.XX_o) (__typef)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(propnanfx.XX_o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(addsf3x.XX_o) (__propnanf)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(spackfx.XX_o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(divsf3x.XX_o) (__spackf)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(unpackfx.XX_o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(divsf3x.XX_o) (__unpackf)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(errno.XX_o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(divsf3x.XX_o) (_errno)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(floatundisf.XX_o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(floatunsisf.XX_o) (___floatundisf)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(fpack.XX_o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(floatundisf.XX_o) (__fpack)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libm-elf.a(logf.XX_o)
+                              .ca/build/Config_5/production/_ext/1472/AccessPoint.o (_logf)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-elf.a(__errno_location.XX_o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libm-elf.a(logf.XX_o) (___errno_val)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(floatsisf.XX_o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libm-elf.a(logf.XX_o) (___floatsisf)
+/Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(floatdisf.XX_o)
+                              /Applications/microchip/xc16/v2.00/bin/bin/../../lib/libc99-pic30-elf.a(floatsisf.XX_o) (___floatdisf)
