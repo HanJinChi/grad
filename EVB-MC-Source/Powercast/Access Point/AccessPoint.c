@@ -290,7 +290,14 @@ int main(void)
   	IPC0bits.T1IP =0x3; 	// setup Timer1 interrupt for desired priority level
 	IEC0bits.T1IE = 1; 		// enable Timer1 interrupts	
 	T1CON = 0x8010;		 	// enable timer1 with prescalar of 1:8 
-
+    #if defined(Enc)
+        BYTE SimonKey[] = {0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xa,0xb};
+        BYTE XteaKey[] = {0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7};
+    #endif
+    
+    #if defined(EffciencyTest)
+        unsigned int time0,delta_time;
+    #endif
     while(1)
     {
         /*******************************************************************/
@@ -301,32 +308,25 @@ int main(void)
         /*******************************************************************/
         if ( MiApp_MessageAvailable() )
         {
-            ConsolePutROMString((ROM char*)"PayloadSize is ");
-            ConsolePut(rxMessage.PayloadSize+'0');
-            ConsolePutROMString((ROM char*)"\r\n");
-            
-            BYTE SimonKey[] = {0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xa,0xb};
-            if(Simon6496CcmDec(rxMessage.Payload,rxMessage.PayloadSize,SimonKey)){
-                ConsolePutROMString((ROM char*)"DEC SUCCESS!\n");
-                ConsolePutROMString((ROM char*)"\r\n");
-                ConsolePutROMString((ROM char*)"data is :");
-                for(int i = 0;i<rxMessage.PayloadSize;i++){
-                    ConsolePut(rxMessage.Payload[i]+'0');
-                }
-                ConsolePutROMString((ROM char*)"\r\n");
-            }
-            else{
-                ConsolePutROMString((ROM char*)"DEC Fail!\n");
-                ConsolePutROMString((ROM char*)"\r\n");
-            }
-            
-            
-            
+            #if defined(Enc)
+                #if defined(SIMON)
+                    if(!(Simon6496CcmDec(rxMessage.Payload,rxMessage.PayloadSize,SimonKey))){
+                        ConsolePutROMString((ROM char*)"DEC Fail!\n");
+                        ConsolePutROMString((ROM char*)"\r\n");
+                    }
+                #endif
+                #if defined(XTEA)
+                    if(!(XteaCcmDec(rxMessage.Payload,rxMessage.PayloadSize,XteaKey))){
+                        ConsolePutROMString((ROM char*)"DEC Fail!\n");
+                        ConsolePutROMString((ROM char*)"\r\n");
+                    }
+                #endif
+            #endif
 	        // Increment Packet counter
         	Packet++;
         	if (Packet == 100000)		// only displaying 5 digits, roll over
         		Packet = 0;
-            /*
+
 	        // Mode of the board that sent the packet
 	        boardMode = rxMessage.Payload[0];
 	        
@@ -341,75 +341,111 @@ int main(void)
        		// Calulate time since last packet
 			delta_time_min = Sec_between_packet[nodeID] / 60;
        		delta_time_sec = Sec_between_packet[nodeID] % 60;
+            
+            #if defined(EffciencyTest)
+                if(Packet == 1){
+                    time0 = Total_sec_cnt;
+                    ConsolePutROMString((ROM char*)"Effciency test begin \n");
+                }
+                else if((Packet-1)%1000 == 0){
+                    ConsolePutROMString((ROM char*)"Packet number : ");
+                    ConsolePut(Packet/1000 + '0');
+                    ConsolePut((Packet%1000)/100 + '0' );
+                    ConsolePut((Packet%100)/10 + '0');
+                    ConsolePut(Packet%10 + '0');
+                    ConsolePut((ROM char*)"    ");
+                    
+                    delta_time = Total_sec_cnt - time0;
+                    ConsolePutROMString((ROM char*)"delta time is:    ");
+                    ConsolePut(delta_time/1000 + '0');
+                    ConsolePut((delta_time%1000)/100 + '0');
+                    ConsolePut((delta_time%100)/10 + '0');
+                    ConsolePut( delta_time%10 + '0' );
+                    ConsolePutROMString((ROM char*)"seconds  \n");
+                }
+            #endif
 
 	        if (boardMode == 0)
 	        {
+                #if defined(EffciencyTest)
+        
+                #else
+                    ConsolePutROMString((ROM char*)"PayloadSize is ");
+                    ConsolePut(rxMessage.PayloadSize+'0');
+                    ConsolePutROMString((ROM char*)"\r\n");
+
+                    ConsolePutROMString((ROM char*)"data is :");
+                    for(int i = 0;i<rxMessage.PayloadSize;i++){
+                        ConsolePut(rxMessage.Payload[i]+'0');
+                    }
+                    ConsolePutROMString((ROM char*)"\r\n"); 
+                #endif
 		        // ************* NORMAL MODE ******************
 	        
-            	// Get TXID
-            	TXID = rxMessage.Payload[2];
-
-				// Get VDD, used to convert ADC readings to mV
-            	vddValH = rxMessage.Payload[3];
-            	vddValL = rxMessage.Payload[4];
-            	vddVal = ((unsigned int)vddValH << 8) + vddValL;
-            	vddVal = VBG_VAL / vddVal; 						// calculate VDD from VBG
-
-
-				// Convert RSSI ADC reading to mV
-            	rssiValH = rxMessage.Payload[5];
-            	rssiValL = rxMessage.Payload[6];
-            	rssiVal = ((unsigned int)rssiValH << 8) + rssiValL;
-            	rssiVal = (WORD)((vddVal * (long)rssiVal) / 1024);
-            	
-            	GetRSSI();
-            
-            	
-            	// Convert THERMISTOR ADC reading to mV
-            	thermValH = rxMessage.Payload[7];
-            	thermValL = rxMessage.Payload[8];
-            	thermVal = ((unsigned int)thermValH << 8) + thermValL;
-            	thermVal = (WORD)((vddVal * (long)thermVal) / 1024);
-
-				// Convert the mV value from thermistor to temperature in C           
-            	res = T_BIAS * ((float)thermVal / ((float)vddVal - (float)thermVal));
- 				res = logf(res / R_0);
- 				res = (1 / B_CONST) * res;
- 				tem = 1 / ((1 / T_0) + res) - 273;
- 				tempVal = ((tem * 9 / 5) + 32) * 10;	// convert degrees C to F, *10 for console 
-			
-			
-				// Convert HUMIDITY ADC reading to mV
-            	humValH = rxMessage.Payload[9];
-            	humValL = rxMessage.Payload[10];
-            	humVal = ((unsigned int) humValH << 8) + humValL;
-            	humVal = (WORD)((vddVal * (long)humVal) / 1024);
-
-				// Convert the mV value from humidity sensor to relative humidity
-				// Equation from humidity sensor data sheet, *100 for console
-				humVal = (((((long)humVal * 100000) / vddVal) - 15150) / 636);
-			
-			
-				// Convert LIGHT ADC reading to mV
-            	lightValH = rxMessage.Payload[11];
-            	lightValL = rxMessage.Payload[12];
-            	lightVal = ((unsigned int) lightValH << 8) + lightValL;  
-				lightVal = (WORD)((vddVal * (long)lightVal) / 1024);
-			
-				// Convert the mV to illuminance
-				if (lightVal > 10)
-				{
-            		res = vddVal - lightVal;					// get voltage across bias resistor
-            		curr = res / (L_BIAS / 1000);				// get current through resistor
-            		lightVal = 100 * curr / 50;					// convert current to illuminance Ev (lux)
-    			}        		
-
-            	
-            	// Convert EXTERNAL ADC reading to mV
-            	extValH = rxMessage.Payload[13];
-            	extValL = rxMessage.Payload[14];
-            	extVal = ((unsigned int) extValH << 8) + extValL;
-            	extVal = (WORD)((vddVal * (long)extVal) / 1024);
+//            	// Get TXID
+//            	TXID = rxMessage.Payload[2];
+//
+//				// Get VDD, used to convert ADC readings to mV
+//            	vddValH = rxMessage.Payload[3];
+//            	vddValL = rxMessage.Payload[4];
+//            	vddVal = ((unsigned int)vddValH << 8) + vddValL;
+//            	vddVal = VBG_VAL / vddVal; 						// calculate VDD from VBG
+//
+//
+//				// Convert RSSI ADC reading to mV
+//            	rssiValH = rxMessage.Payload[5];
+//            	rssiValL = rxMessage.Payload[6];
+//            	rssiVal = ((unsigned int)rssiValH << 8) + rssiValL;
+//            	rssiVal = (WORD)((vddVal * (long)rssiVal) / 1024);
+//            	
+//            	GetRSSI();
+//            
+//            	
+//            	// Convert THERMISTOR ADC reading to mV
+//            	thermValH = rxMessage.Payload[7];
+//            	thermValL = rxMessage.Payload[8];
+//            	thermVal = ((unsigned int)thermValH << 8) + thermValL;
+//            	thermVal = (WORD)((vddVal * (long)thermVal) / 1024);
+//
+//				// Convert the mV value from thermistor to temperature in C           
+//            	res = T_BIAS * ((float)thermVal / ((float)vddVal - (float)thermVal));
+// 				res = logf(res / R_0);
+// 				res = (1 / B_CONST) * res;
+// 				tem = 1 / ((1 / T_0) + res) - 273;
+// 				tempVal = ((tem * 9 / 5) + 32) * 10;	// convert degrees C to F, *10 for console 
+//			
+//			
+//				// Convert HUMIDITY ADC reading to mV
+//            	humValH = rxMessage.Payload[9];
+//            	humValL = rxMessage.Payload[10];
+//            	humVal = ((unsigned int) humValH << 8) + humValL;
+//            	humVal = (WORD)((vddVal * (long)humVal) / 1024);
+//
+//				// Convert the mV value from humidity sensor to relative humidity
+//				// Equation from humidity sensor data sheet, *100 for console
+//				humVal = (((((long)humVal * 100000) / vddVal) - 15150) / 636);
+//			
+//			
+//				// Convert LIGHT ADC reading to mV
+//            	lightValH = rxMessage.Payload[11];
+//            	lightValL = rxMessage.Payload[12];
+//            	lightVal = ((unsigned int) lightValH << 8) + lightValL;  
+//				lightVal = (WORD)((vddVal * (long)lightVal) / 1024);
+//			
+//				// Convert the mV to illuminance
+//				if (lightVal > 10)
+//				{
+//            		res = vddVal - lightVal;					// get voltage across bias resistor
+//            		curr = res / (L_BIAS / 1000);				// get current through resistor
+//            		lightVal = 100 * curr / 50;					// convert current to illuminance Ev (lux)
+//    			}        		
+//
+//            	
+//            	// Convert EXTERNAL ADC reading to mV
+//            	extValH = rxMessage.Payload[13];
+//            	extValL = rxMessage.Payload[14];
+//            	extVal = ((unsigned int) extValH << 8) + extValL;
+//            	extVal = (WORD)((vddVal * (long)extVal) / 1024);
 			}
 			else
 			{
@@ -418,10 +454,9 @@ int main(void)
 				// Add user created code here
 				// Make sure to change USER section of PrintScreen() below
 			}	
-
        		// Print data to terminal window, based on boardMode
            	PrintScreen();
-            */
+            
            	// Reset time between packets
            	Sec_between_packet[nodeID] = 0;
             

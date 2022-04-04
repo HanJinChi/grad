@@ -3,12 +3,24 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/WirelessProtocols/P2P/P2P.c</file>
+            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/Include/WirelessProtocols/P2P/ConfigP2P.h</file>
             <file>file:/Users/rocku/grad/EVB-MC-Source/Powercast/End%20Point/HardwareProfile.c</file>
+            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/Include/WirelessProtocols/P2P/P2P.h</file>
+            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/Transceivers/security.c</file>
+            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/Include/Transceivers/Security.h</file>
             <file>file:/Users/rocku/grad/EVB-MC-Source/Powercast/End%20Point/HardwareProfile.h</file>
             <file>file:/Users/rocku/grad/EVB-MC-Source/Powercast/End%20Point/EndPoint.c</file>
-            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/Include/Transceivers/MRF89XA/ConfigMRF89XA.h</file>
+            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/Include/Transceivers/MCHP_MAC.h</file>
             <file>file:/Users/rocku/grad/EVB-MC-Source/Powercast/End%20Point/End%20Point.X/Makefile</file>
+            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/Include/Console.h</file>
             <file>file:/Users/rocku/grad/EVB-MC-Source/Powercast/End%20Point/ConfigApp.h</file>
+            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/Common/Console.c</file>
+            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/Include/GenericTypeDefs.h</file>
+            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/Transceivers/MRF24J40/MRF24J40.c</file>
+            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/Include/WirelessProtocols/MCHP_API.h</file>
+            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/Common/TimeDelay.c</file>
+            <file>file:/Users/rocku/grad/EVB-MC-Source/Microchip/Include/MSPI.h</file>
         </group>
     </open-files>
 </project-private>

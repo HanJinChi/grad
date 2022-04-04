@@ -970,16 +970,15 @@
         extern WORD_VAL WakeupTimes;
     #endif
         
-    #define  SIMON    
+    #define XTEA
     #define MiAPP_SECURITY
-    #define BLOCK_SIZE 8
-    #define ROUNT_KEY_NUM 42
-    #define BLOCK_UNIT DWORD
-    #define SEC_MIC_LEN     8 
-
+    #define Enc 
+//    #define EffciencyTest
 
     #if defined(SIMON)
-
+        #define SEC_MIC_LEN 8
+        #define BLOCK_SIZE 8
+        #define BLOCK_UNIT DWORD
         #define ROTL32(x,r) (((x)<<(r)) | (x>>(32-(r))))
         #define ROTR32(x,r) (((x)>>(r)) | ((x)<<(32-(r))))
         #define ROTL64(x,r) (((x)<<(r)) | (x>>(64-(r))))
@@ -989,24 +988,43 @@
         #define R32x2(x,y,k1,k2) (y^=f32(x), y^=k1, x^=f32(y), x^=k2)
 
 
-    void Simon6496KeySchedule(INPUT DWORD K[],INPUT DWORD rk[]);               /* n = 32,m = 3,block size = 2*n = 64 bits,key length = m*n = 96bits*/
-    void Simon6496Encrypt(IOPUT DWORD text[],INPUT DWORD rk[]);
-    void Simon6496Decrypt(IOPUT DWORD text[],INPUT DWORD rk[]);
-    void Simon6496Ctr(INPUT BYTE text[], BYTE len,BYTE key[],BYTE nounce[]);
-    void Simon6496CbcMac(INPUT BYTE *text, INPUT BYTE len, INPUT BYTE *key, OUTPUT BYTE *MIC);
-
-    #if defined(MiAPP_SECURITY)
-        void Simon6496CcmEnc(BYTE *text,BYTE payloadLen, BYTE *key);
-        BOOL Simon6496CcmDec(BYTE *text,BYTE payloadLen, BYTE *key);
-    #else
-        void Simon6496CcmEnc(INPUT BYTE *text, INPUT BYTE headerLen, INPUT BYTE payloadLen, INPUT BYTE *key);
-        BOOL Simon6496CcmDec(BYTE *text, BYTE headerLen, BYTE payloadLen, BYTE *key);
+        void Simon6496KeySchedule(INPUT DWORD K[],INPUT DWORD rk[]);               /* n = 32,m = 3,block size = 2*n = 64 bits,key length = m*n = 96bits*/
+        void Simon6496Encrypt(IOPUT DWORD text[],INPUT DWORD rk[]);
+        void Simon6496Decrypt(IOPUT DWORD text[],INPUT DWORD rk[]);
+        void Simon6496Ctr(INPUT BYTE text[], BYTE len,BYTE key[],BYTE nounce[]);
+        void Simon6496CbcMac(INPUT BYTE *text, INPUT BYTE len, INPUT BYTE *key, OUTPUT BYTE *MIC);
     #endif
-#endif
+    
+    #if defined(XTEA)
+        #define SEC_MIC_LEN 4
+        #define BLOCK_SIZE 4
+        #define BLOCK_UNIT WORD
+        #define XTEA_ROUND  32
+        void XteaEnc(IOPUT WORD* text,INPUT DWORD* key);
+        void XteaCtr(INPUT BYTE text[], BYTE len,DWORD key[],BYTE nounce[]);
+        void XteaCbcMac(INPUT BYTE *text, INPUT BYTE len, INPUT DWORD *key, OUTPUT BYTE *MIC);
+    #endif
         
         
         
-        
-        
+    #if defined(MiAPP_SECURITY)
+        #if defined(SIMON)
+            void Simon6496CcmEnc(BYTE *text,BYTE payloadLen, BYTE *key);
+            BOOL Simon6496CcmDec(BYTE *text,BYTE payloadLen, BYTE *key);
+        #else
+            #if defined(MiMAC_SECURITY)
+                void Simon6496CcmEnc(INPUT BYTE *text, INPUT BYTE headerLen, INPUT BYTE payloadLen, INPUT BYTE *key);
+                BOOL Simon6496CcmDec(BYTE *text, BYTE headerLen, BYTE payloadLen, BYTE *key);
+            #endif
+        #endif
+
+        #if defined(XTEA)
+            void XteaCcmEnc(BYTE *text,BYTE payloadLen, DWORD *key);
+            BOOL XteaCcmDec(BYTE *text,BYTE payloadLen, DWORD *key);
+        #else
+            #if defined(MiMAC_SECURITY)
+            #endif
+        #endif
+    #endif
 #endif
 

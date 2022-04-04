@@ -97,6 +97,7 @@ unsigned char humValH;
 unsigned char humValL;
 unsigned char extValH;
 unsigned char extValL;
+BYTE ctl = 0;
 
 // Sensor ADC inputs
 #define TEMP_CHANNEL	5
@@ -152,10 +153,14 @@ BYTE myChannel = 25;
 int main(void)
 {   
     int i;
+    #if defined(Enc)
+        BYTE SimonKey[] = {0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xa,0xb};
+        BYTE XteaKey[] = {0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7};
+    #endif
+    
     // Initialize the system
     BoardInit();      
 	GetBoardID();
-    
     // Loop through code forever while power is applied,  10s delay after reset at end
     while(1)
     {
@@ -265,39 +270,49 @@ int main(void)
 		// Check Mode select pin 
 	    if(MODE == 0)					// if mode jumper is off send rest of data
     	{
-            /*
-    		MiApp_WriteData(TXID);
-	    	MiApp_WriteData(vddValH);
-    		MiApp_WriteData(vddValL);
-    		MiApp_WriteData(rssiValH);
-    		MiApp_WriteData(rssiValL);
-    
-	    	// Sensor Data  
-    		MiApp_WriteData(tempValH);
-    		MiApp_WriteData(tempValL);
-	    	MiApp_WriteData(humValH);
-    		MiApp_WriteData(humValL);
-    		MiApp_WriteData(lightValH);
-	    	MiApp_WriteData(lightValL);
-    		MiApp_WriteData(extValH);
-    		MiApp_WriteData(extValL);
-            */
-            
-            
-            for(int i = 1;i <= 6;i++){
+//            
+//    		MiApp_WriteData(TXID);
+//	    	MiApp_WriteData(vddValH);
+//    		MiApp_WriteData(vddValL);
+//    		MiApp_WriteData(rssiValH);
+//    		MiApp_WriteData(rssiValL);
+//    
+//	    	// Sensor Data  
+//    		MiApp_WriteData(tempValH);
+//    		MiApp_WriteData(tempValL);
+//	    	MiApp_WriteData(humValH);
+//    		MiApp_WriteData(humValL);
+//    		MiApp_WriteData(lightValH);
+//	    	MiApp_WriteData(lightValL);
+//    		MiApp_WriteData(extValH);
+//    		MiApp_WriteData(extValL);
+            for(int i = 0;i < 6;i++){
                 MiApp_WriteData(i);
             }
-            BYTE SimonKey[] = {0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xa,0xb};
-            Simon6496CcmEnc(TxBuffer,TxData,SimonKey);
-            TxData += BLOCK_SIZE;
+            
+            
+            #if defined(Enc)
+                #if defined(SIMON)
+                    Simon6496CcmEnc(TxBuffer,TxData,SimonKey);
+                    TxData += BLOCK_SIZE;
+                #endif
+
+                #if defined(XTEA)
+                    XteaCcmEnc(TxBuffer,TxData,XteaKey);
+                    TxData += BLOCK_SIZE;
+                #endif
+            #endif
+            
+            #if defined(EfficiencyTest)
+
+            #endif
+
     	}
     	else
             
     	{
 	    	// Add user created data to packet
 		}
-        
-
 		// Send Packet
     	MiApp_BroadcastPacket(FALSE);
 
